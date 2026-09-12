@@ -1,0 +1,185 @@
+1|#!/data/data/com.termux/files/usr/bin/env bash
+2|# Animated pipes.sh terminal screensaver at an angle.
+3|# Copyright (C) 2013 by Yu-Jie Lin
+4|#
+5|# Permission is hereby granted, free of charge, to any person obtaining a copy
+6|# of this software and associated documentation files (the "Software"), to deal
+7|# in the Software without restriction, including without limitation the rights
+8|# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+9|# copies of the Software, and to permit persons to whom the Software is
+10|# furnished to do so, subject to the following conditions:
+11|#
+12|# The above copyright notice and this permission notice shall be included in
+13|# all copies or substantial portions of the Software.
+14|#
+15|# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+16|# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+17|# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+18|# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+19|# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+20|# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+21|# THE SOFTWARE.
+22|#
+23|# Blog: http://blog.yjl.im/2013/07/pipesxsh-animated-pipessh-terminal.html
+24|25|26|27|# Screencast: http://youtu.be/dITTlFPYVPA
+28|
+29|W=$(tput cols) H=$(tput lines)
+30|# maximal random value + 1
+31|M=32768
+32|
+33|SETS=('╱╲' '/\')
+34|COLORS=(31 32 33 34 35 36 37)
+35|
+36|# default values
+37|N=1
+38|T=0
+39|I=0.05
+40|P=25
+41|R=$((W * H / 4))
+42|
+43|HELP="Usage: $(basename $0) [OPTIONS]
+44|Animated pipes.sh terminal screensaver at an angle.
+45|
+46|Options:
+47|
+48|  -n [1-]     number of pipes. (Default: $N)
+49|  -t [0-$((${#SETS[@]} - 1))]    type of pipes. (Default: $T)
+50|  -i [float]  piping interval or maze generation interval. (Default: $I)
+51|  -P [0-100]  probability of a turning pipe or of \\ in maze generation. (Default: $P)
+52|  -r [LIMIT]  reset after x characters, 0 if no limit. (Default: $R)
+53|  -R          random starting point.
+54|  -C          no color.
+55|  -X          maze generation.
+56|  -h          this help message.
+57|"
+58|
+59|while getopts "n:t:i:P:r:RCXh" arg; do
+60|  case $arg in
+61|    n)
+62|      ((N = OPTARG > 0 ? OPTARG : N))
+63|      ;;
+64|    t)
+65|      ((T = (OPTARG >= 0 && OPTARG < ${#SETS[@]}) ? OPTARG : T))
+66|      ;;
+67|    i)
+68|      I=$OPTARG
+69|      ;;
+70|    P)
+71|      ((P = (OPTARG >= 0 && OPTARG <= 100) ? OPTARG : P))
+72|      ;;
+73|    r)
+74|      ((R = OPTARG >= 0 ? OPTARG : R))
+75|      ;;
+76|    R)
+77|      RNDSTART=1
+78|      ;;
+79|    C)
+80|      NOCOLOR=1
+81|      ;;
+82|    X)
+83|      MAZE=1
+84|      ;;
+85|    h)
+86|      echo -e "$HELP"
+87|      exit 0
+88|      ;;
+89|  esac
+90|done
+91|
+92|do_exit() {
+93|  # Show cursor and echo stdin
+94|  echo -ne "\e[?25h"
+95|  stty echo
+96|  clear
+97|  exit 0
+98|  }
+99|trap do_exit INT TERM
+100|
+101|# No echo stdin and hide the cursor
+102|stty -echo
+103|echo -ne "\e[?25l"
+104|
+105|# maze geneartion
+106|while [[ $MAZE ]] && clear; do
+107|  [[ $NOCOLOR ]] || echo -ne "\e[1;${COLORS[${#COLORS[@]} * RANDOM / M]}m"
+108|  for ((i = 0; i < W * H; i++ )); do
+109|    echo -ne ${SETS[T]:100 * RANDOM / M < P:1}
+110|  done
+111|  read -t $I -n 1 && [[ $REPLY =~ q|Q ]] && do_exit
+112|done
+113|
+114|# initialze values
+115|for ((n = 0; n < N; n++)); do
+116|  ((X[n] = RNDSTART ? (W + 2) * RANDOM / M : W / 2))
+117|  ((Y[n] = RNDSTART ? (H + 2) * RANDOM / M : H / 2))
+118|  D[n]=$((4 * RANDOM / M))
+119|  C[n]=${COLORS[${#COLORS[@]} * RANDOM / M]}
+120|done
+121|
+122|clear
+123|while :; do
+124|  for ((n = 0; n < N; n++, CC = 0)); do
+125|    x=${X[n]} y=${Y[n]}
+126|    d=${D[n]} c=${C[n]}
+127|
+128|    # calculate new direction `d`
+129|    # 1  0
+130|    #  \/  4 directions 0 to 3
+131|    #  /\
+132|    # 2  3
+133|    # valid directions: d: dd', d' is the new direction
+134|    # d
+135|    # 0:  / 00 \  01          03
+136|    #    /     /           /\
+137|    # 1:  / 10 \  11    12
+138|    #     \     \    /\
+139|    # 2:       \/ 21  / 22  / 23
+140|    #                /      \
+141|    # 3: \/ 30       \  32 \  33
+142|    #                /      \
+143|    ((d = (100 * RANDOM / M) < P ? ((d + 1) + 2 * (RANDOM % 2)) % 4 : d))
+144|    ((e = (d + 1) % 4))
+145|
+146|    # calculate new position
+147|    # d'  x'  y'
+148|    # 0: x+1 y-1
+149|    # 1: x-1 y-1
+150|    # 2: x-1 y+1
+151|    # 3: x+1 y+1
+152|    ((xn = e < 2 ? x + 1 : x - 1))
+153|    ((yn = d < 2 ? y - 1 : y + 1))
+154|    
+155|    # adjust position and change color?
+156|    ((d < 2 && y == 0)) && ((yn--, CC=1))
+157|    ((e > 1 && x == 0)) && ((xn--, CC=1))
+158|    ((d > 1 && y == H)) && ((yn++, CC=1))
+159|    ((e < 2 && x == W)) && ((xn++, CC=1))
+160|    ((CC)) && c=${COLORS[${#COLORS[@]} * RANDOM / M]}
+161|
+162|    # warp pipe
+163|    ((xn = (xn + W + 1) % (W + 1)))
+164|    ((yn = (yn + H + 1) % (H + 1)))
+165|
+166|    # calculate position in terminal
+167|    # d'  xt   yt
+168|    # 0: x'   y'+1
+169|    # 1: x'+1 y'+1
+170|    # 2: x'+1 y'
+171|    # 3: x'   y'
+172|    ((xt = e < 2 ? xn : xn + 1))
+173|    ((yt = d < 2 ? yn + 1 : yn))
+174|
+175|    echo -ne "\e[${yt};${xt}H"
+176|    [[ $NOCOLOR ]] || echo -ne "\e[1;${c}m"
+177|    echo -n "${SETS[T]:d%2:1}"
+178|
+179|    X[n]=$xn Y[n]=$yn
+180|    D[n]=$d C[n]=$c
+181|  done
+182|  read -t $I -n 1 && [[ $REPLY =~ q|Q ]] && do_exit
+183|  ((R)) && ((r += N, r >= R)) && r=0 && clear
+184|done
+185|
+186|do_exit
+187|
+188|

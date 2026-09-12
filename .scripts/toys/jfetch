@@ -1,0 +1,103 @@
+1|#!/usr/bin/env bash
+2|
+3|art="
+4|\\033c\\033[31m  .--.---.
+5| ( \\'--'/ )
+6|( '..-...' )
+7| '.'-._.'.'
+8| \\033[34m <'-.,.->
+9|     \`\\(   _
+10|     < \\ / \\
+11|     __ \\\\|_/
+12|    /  \\ \\\\
+13|     '--'.\\ >
+14|           \\\\\\033[0m
+15|"
+16|
+17|## read system info
+18|read -r host < /proc/sys/kernel/hostname
+19|
+20|# Get Memory usage
+21|get_mem () {
+22|  free --mega | sed -n -E '2s/^[^0-9]*([0-9]+) *([0-9]+).*/'"${space}"'\2 \/ \1 /p'
+23|}
+24|
+25|## storage
+26|storage_info() {
+27|    storageused=$(df -h / | grep "/" | awk '{print $3}')
+28|    storageavail=$(df -h / | grep "/" | awk '{print $2}')
+29|}
+30|
+31|#getting the init
+32|get_init() {
+33|    os="$(uname -o)"
+34|    if [ "$os" = "Android" ]; then
+35|       echo "init.rc"
+36|    elif [ ! $(pidof systemd) ]; then
+37|        if [ -f "/sbin/openrc" ]; then
+38|            echo "openrc"
+39|        else
+40|         echo $(cat /proc/1/comm)
+41|        fi
+42|    else
+43|        echo "systemD"
+44|    fi
+45|}
+46|
+47|## os
+48|for os in /etc/os-release /usr/lib/os-release; do
+49|	[ -f $os ] && . $os && break
+50|done
+51|
+52| ## wm
+53|  [ ! "$wm" ] && [ "$DISPLAY" ] && command -v xprop >/dev/null && {
+54|    id=$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)
+55|    id=${id##* }
+56|    wm=$(xprop -id "$id" -notype -len 100 -f _NET_WM_NAME 8t |
+57|      grep '^_NET_WM_NAME' | cut -d\" -f 2)
+58|  }
+59|
+60|
+61|  [ ! "$wm" ] || [ "$wm" = "LG3D" ] &&
+62|    wm=$(
+63|      ps -e | grep -m 1 -o \
+64|        -e "sway" \
+65|        -e "kiwmi" \
+66|        -e "wayfire" \
+67|        -e "sowm" \
+68|        -e "catwm" \
+69|        -e "fvwm" \
+70|        -e "dwm" \
+71|        -e "2bwm" \
+72|        -e "monsterwm" \
+73|        -e "tinywm" \
+74|        -e "xmonad"
+75|    )
+76|
+77|## kernel	
+78|	read -r _ _ version _ < /proc/version
+79|	ke=${version%%-*}
+80|        kernel="$(uname -r)"
+81|	
+82|83|84|
+85|c0='[0m';
+86|c1='[31m'; c2='[32m'
+87|c3='[33m'; c4='[34m'
+88|c5='[35m'; c6='[36m'
+89|c7='[37m'; c8='[38m'
+90|palette="[7m$c1 $c1 $c1 $c1 $c2 $c2 $c2 $c2 $c3 $c3 $c3 $c3 $c4 $c4 $c4 $c4 $c5 $c5 $c5 $c5 $c6 $c6 $c6 $c6 [m"
+91|white="[7m$c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 $c7 [m"
+92|
+93|# output
+94|    printf "		$art"
+95|    printf "
+96|${c5} ${c5}${host}
+97|${c5} ${c3}wm${c0} ~ ${wm}
+98|${c5} ${c3}sh${c0} ~ ${SHELL##*/}
+99|${c5} ${c3}ram${c0} ~ $(get_mem)
+100|${c5} ${c3}init${c0} ~ $(get_init)
+101|${c5} ${c3}os${c0} ~ ${PRETTY_NAME}
+102|${c5} ${c3}ker${c0} ~ ${kernel}
+103|    
+104|"
+105|

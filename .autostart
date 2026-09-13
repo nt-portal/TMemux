@@ -24,9 +24,16 @@ echo -e "\e[4 q"
 
 #fi
 
-# autostart — neofetch TMemux
-clear
-neofetch --config $HOME/.config/neofetch/config.conf
+# autostart — neofetch TMemux (non-blocking, timeout biar tidak perlu Ctrl+C)
+if [ -t 1 ] && command -v neofetch >/dev/null 2>&1 && [ -f "$HOME/.config/neofetch/config.conf" ]; then
+  clear
+  # ponytail: timeout 5 cukup untuk fetch storage/battery; naikkan jika device lambat
+  if command -v timeout >/dev/null 2>&1; then
+    timeout 5 neofetch --config "$HOME/.config/neofetch/config.conf" 2>/dev/null || true
+  else
+    neofetch --config "$HOME/.config/neofetch/config.conf" 2>/dev/null || true
+  fi
+fi
 
 # SSH for Git & GitHub!
 #SSH_ENV="${HOME}/.ssh/agent-environment"

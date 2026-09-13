@@ -38,7 +38,7 @@ function fetchStorage() {
   SIZE=$(echo ${GREP_ONE_ROW} | awk '{print $2}')
   USED=$(echo ${GREP_ONE_ROW} | awk '{print $3}')
   AVAIL=$(echo ${GREP_ONE_ROW} | awk '{print $4}')
-  USE=$(echo ${GREP_ONE_ROW}} | awk '{print $5}' | sed "s/%//g")
+  USE=$(echo ${GREP_ONE_ROW} | awk '{print $5}' | sed "s/%//g")
   MOUNTED=$(echo ${GREP_ONE_ROW} | awk '{print $6}')
   ICON=""
 

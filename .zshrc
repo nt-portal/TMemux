@@ -1,12 +1,10 @@
 export ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="kali"  # TMemux default — Kali style 2-baris: ┌──(user㉿host)-[path]
+ZSH_THEME="kali"
 plugins=(
   git
   zsh-autosuggestions
   zsh-syntax-highlighting
   bgnotify
-  zsh-fzf-history-search
-  zsh-autocomplete
 )
 _tmp_plugins=()
 for _p in "${plugins[@]}"; do
@@ -35,7 +33,11 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' rehash true
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-bindkey '^I' expand-or-complete 2>/dev/null || true
+bindkey -e
+bindkey '^[[A' history-search-backward 2>/dev/null || true
+bindkey '^[[B' history-search-forward 2>/dev/null || true
+bindkey '^[[C' forward-char 2>/dev/null || true
+bindkey '^[[D' backward-char 2>/dev/null || true
 
 [[ -f $HOME/.aliases ]] && source $HOME/.aliases
 [[ -f $HOME/.autostart ]] && source $HOME/.autostart

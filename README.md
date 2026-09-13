@@ -7,6 +7,8 @@ Repositori: https://github.com/nt-portal/TMemux · Rilis: [1.0.0-release](https:
 
 > Dirawat oleh Tarna. Versi [1.0.0-release](https://github.com/nt-portal/TMemux/releases/tag/1.0.0-release).
 
+<!-- version: 1.0.0-release -->
+
 ---
 
 ## Tentang

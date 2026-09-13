@@ -2,6 +2,8 @@
 
 echo -e "\e[4 q"
 
+[ -z "${COLUMNS:-}" ] && export COLUMNS=$(stty size 2>/dev/null | awk '{print $2}')
+[ -z "${COLUMNS:-}" ] && export COLUMNS=$(tput cols 2>/dev/null || echo 80)
 if [ -t 1 ] && command -v neofetch >/dev/null 2>&1 && [ -f "$HOME/.config/neofetch/config.conf" ]; then
   if command -v timeout >/dev/null 2>&1; then
     timeout 5 neofetch --config "$HOME/.config/neofetch/config.conf" 2>/dev/null || true

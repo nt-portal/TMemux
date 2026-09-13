@@ -1,5 +1,7 @@
 # TMemux
 
+[![Version](https://img.shields.io/badge/version-1.0.0--release-blue?style=flat-square)](https://github.com/nt-portal/TMemux/tags) [![Platform](https://img.shields.io/badge/platform-Termux%20%7C%20ZeroTermux-77c1ff?style=flat-square)](https://github.com/termux/termux-app/releases) [![Shell](https://img.shields.io/badge/shell-ZSH-303030?style=flat-square)](#) [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE.md)
+
 Dotfiles Termux yang rapi, ringan, dan siap pakai untuk penggunaan harian.
 Berbasis ZSH + Neofetch + LazyVim + WakaTime, dirancang untuk layar Termux 101×39.
 

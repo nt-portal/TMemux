@@ -20,7 +20,6 @@ function alertTorch() {
 
 }
 
-
 function mainAlert() {
 
   alertFinish

@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-# LazyVim-Termux — replaces NvChad flow
-# source: https://github.com/nt-portal/LazyVim-Termux.git (install.sh)
-# font default: assest/font.ttf -> ~/.termux/font.ttf
 
 function NvChad() {
   echo -e "\n‏‏‎‏‏‎ ‎ ‎‏‏‎  ‎📦 Installing Neovim (LazyVim-Termux)\n"
   stat "CHECK" "Warning" "'${COLOR_WARNING}LazyVim${COLOR_BASED}' Starter"
 
-  # deps needed by LazyVim-Termux install.sh + DeepSeek
   for _pkg in git neovim nodejs yarn fd grep; do
     if ! pkg list-installed $_pkg 2>/dev/null | grep -q "^$_pkg/"; then
       start_animation "       Installing '${COLOR_SUCCESS}$_pkg${COLOR_BASED}' ..."
@@ -16,7 +12,6 @@ function NvChad() {
     fi
   done
 
-  # backup old nvim dirs (same as upstream: mv {,.bak})
   for _d in ~/.config/nvim ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim; do
     if [ -e "$_d" ] && [ ! -e "${_d}.bak" ]; then
       stat "RUN" "Warning" "Backup '${COLOR_WARNING}$_d${COLOR_BASED}' -> '${COLOR_WARNING}${_d}.bak${COLOR_BASED}'"
@@ -30,7 +25,6 @@ function NvChad() {
     fi
   done
 
-  # clone LazyVim starter
   if [ -d "$HOME/.config/nvim" ]; then
     stat "RESULT" "Warning" "'${COLOR_WARNING}.config/nvim${COLOR_BASED}' already exists, skip clone"
   else
@@ -49,7 +43,6 @@ function NvChad() {
   PLUGINS="$HOME/.config/nvim/lua/plugins"
   mkdir -p "$PLUGINS"
 
-  # plugins — exact from nt-portal/LazyVim-Termux install.sh
   cat >"$PLUGINS/wakatime.lua" <<'EOF'
 return {
   {
@@ -122,7 +115,6 @@ return {
 }
 EOF
 
-  # upstream has stray `}` — fixed here
   cat >"$PLUGINS/error-lens.lua" <<'EOF'
 return {
   "chikko80/error-lens.nvim",
@@ -131,10 +123,8 @@ return {
 }
 EOF
 
-  # font default: assest/font.ttf -> ~/.termux/font.ttf (repo's .termux/font.ttf is the source)
   stat "RUN" "Warning" "Installing font '${COLOR_WARNING}assest/font.ttf${COLOR_BASED}' -> '${COLOR_WARNING}~/.termux/font.ttf${COLOR_BASED}'"
   mkdir -p "$HOME/.termux"
-  # prefer repo-bundled font, fallback to curl
   if [ -f "$(pwd)/.termux/font.ttf" ]; then
     cp "$(pwd)/.termux/font.ttf" "$HOME/.termux/font.ttf" 2>/dev/null
   elif [ -f "$(pwd)/assest/font.ttf" ]; then

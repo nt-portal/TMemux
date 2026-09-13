@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# animasi loading — dipakai start_animation / stop_animation
-
-# Cara pakai:
-#   start_animation "pesan..." ; <perintah> ; stop_animation $?
-
-
 export COLOR_DEFAULT="\033[0m"
 export COLOR_BLUE="\033[1;34m"
 export COLOR_MAGENTA="\033[1;35m"
@@ -32,7 +26,6 @@ function animation() {
 
    start )
     
-      # let column=$(tput cols)-${#2}-8
       let column=$(echo $COLUMNS)-${#2}-8
 
       printf "%${column}s"
@@ -77,7 +70,6 @@ function animation() {
       exit 1
 
    ;;
-
 
   esac
 }

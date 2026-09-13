@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-# Waka-Termux — wakatime termux integration
-# source: https://github.com/nt-portal/Waka-Termux.git (install.sh)
-# dipanggil dari install.sh setelah NvChad; coding only, no auto-run tanpa izin user
 
 function WakaTermux() {
   echo -e "\n‏‏‎‏‏‎ ‎ ‎‏‏‎  ‎📦 Installing WakaTime (Waka-Termux)\n"
   stat "CHECK" "Warning" "'${COLOR_WARNING}Waka-Termux${COLOR_BASED}'"
 
-  # deps: python + pip wakatime (sesuai upstream: pkg install python; pip install wakatime)
   for _pkg in python; do
     if ! pkg list-installed $_pkg 2>/dev/null | grep -q "^$_pkg/"; then
       start_animation "       Installing '${COLOR_SUCCESS}$_pkg${COLOR_BASED}' ..."
@@ -16,7 +12,6 @@ function WakaTermux() {
     fi
   done
 
-  # pip wakatime
   if ! pip show wakatime >/dev/null 2>&1; then
     start_animation "       Installing '${COLOR_SUCCESS}wakatime${COLOR_BASED}' (pip) ..."
     pip install wakatime >/dev/null 2>&1
@@ -27,7 +22,6 @@ function WakaTermux() {
 
   mkdir -p "$HOME/.wakatime"
 
-  # ensure PATH
   for _rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     [ -f "$_rc" ] || touch "$_rc"
     if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$_rc" 2>/dev/null; then
@@ -35,12 +29,10 @@ function WakaTermux() {
     fi
   done
 
-  # inject shell integration — guard duplicate (upstream injects ke .bashrc, TMemux pakai .zshrc)
   for _rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
     if ! grep -q '__wakatime_track' "$_rc" 2>/dev/null; then
       cat >>"$_rc" <<'EOF'
 
-# ── WakaTime shell integration ────────────────────────────
 if command -v wakatime >/dev/null 2>&1; then
     set +m
     __wakatime_get_project() {
@@ -86,7 +78,6 @@ if command -v wakatime >/dev/null 2>&1; then
     PROMPT_COMMAND="__wakatime_track${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
     if [ -z "$WAKATIME_TIMER_STARTED" ]; then export WAKATIME_TIMER_STARTED=1; __wakatime_timer </dev/null >/dev/null 2>&1 & disown 2>/dev/null; fi
 fi
-# ── /WakaTime ─────────────────────────────────────────────
 EOF
       stat "RESULT" "Success" "WakaTime hook -> '${COLOR_SUCCESS}${_rc}${COLOR_BASED}'"
     else
@@ -94,7 +85,6 @@ EOF
     fi
   done
 
-  # wakatime config — buat jika belum ada api_key
   WAKA_CFG="$HOME/.wakatime.cfg"
   if [ ! -f "$WAKA_CFG" ] || ! grep -q "api_key" "$WAKA_CFG" 2>/dev/null; then
     cat >"$WAKA_CFG" <<'EOF'

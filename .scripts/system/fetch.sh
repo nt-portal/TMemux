@@ -14,7 +14,6 @@ function fetchMusic() {
 
   MPD_HOST=127.0.0.1 # or localhost
   MPD_PORT=8000 # Depend your MPD configuration
-  #MPC_CONNECT_MPD=$(mpc --host=${MPD_HOST} --port=${MPD_PORT} &> /dev/null)
 
   if mpc --host=${MPD_HOST} --port=${MPD_PORT} &> /dev/null; then
 
@@ -113,7 +112,6 @@ function fetchStorage() {
   case $1 in
 
     "" )
-      # echo -e "[ ${COLOR_WARNING}${ICON} ${MOUNTED}${COLOR_BASED} ] > ${USED}B / ${SIZE}B = ${AVAIL}B (${USE}%)"
       stat "${ICON} ${MOUNTED}" "Warning" "${USED}B / ${SIZE}B = ${AVAIL}B (${USE}%)"
     ;;
 

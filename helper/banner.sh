@@ -18,7 +18,7 @@ function banner() {
     ┃                                                                ┃
     ┃                  🚀 Version    : ${VERSION}                         ┃
     ┃                  📅 Build Date : ${BUILD_DATE}                          ┃
-    ┃                  ⚙️ Author     : ${AUTHOR}                         ┃
+    ┃                  ⚙️ Author     : ${AUTHOR}                          ┃
     ┃                                                                ┃
     ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
   "

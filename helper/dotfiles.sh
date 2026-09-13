@@ -16,7 +16,6 @@ DOTFILES=(
   .zshrc
 )
 
-
 function dotFiles() {
 
   setCursor off

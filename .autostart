@@ -27,8 +27,8 @@ echo -e "\e[4 q"
 
 # autostart — neofetch TMemux (non-blocking, timeout biar tidak perlu Ctrl+C)
 if [ -t 1 ] && command -v neofetch >/dev/null 2>&1 && [ -f "$HOME/.config/neofetch/config.conf" ]; then
-  clear
   # ponytail: timeout 5 cukup untuk fetch storage/battery; naikkan jika device lambat
+  # clear dihapus — biar tidak double neofetch (kepotong seperti di screenshot 2x)
   if command -v timeout >/dev/null 2>&1; then
     timeout 5 neofetch --config "$HOME/.config/neofetch/config.conf" 2>/dev/null || true
   else

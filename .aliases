@@ -23,7 +23,7 @@ alias pacupd="pkg update"
 alias pacupgupd="pkg update && pkg upgrade"
 
 #Convert Video
-alias convi="ffmpeg -i $1 -c:v libx264 -crf 25 $2"
+convi(){ ffmpeg -i "$1" -c:v libx264 -crf 25 "$2"; }
 
 #Ping    
 alias pg="ping google.com"
@@ -39,7 +39,7 @@ alias myipall="~/.scripts/system/ip.sh all"
 alias n="ncmpcpp"
 alias mkill="mpd --kill"
 alias m="music"
-alias ncmpcpp-compile="~/TMemux/optional/compile/install/ncmpcpp-compile.sh"
+alias ncmpcpp-compile="~/tmemux/optional/compile/install/ncmpcpp-compile.sh"
 
 #Color Toys
 alias 256colors2="~/.scripts/toys/256colors2.pl"
@@ -82,19 +82,19 @@ alias largefile="du -h -x -s -- * | sort -r -h | head -20"
 alias tarz="neofetch --config $HOME/.config/neofetch/config.conf"
 alias home="neofetch --config $HOME/.config/neofetch/config.conf"
 alias nt="neofetch --config $HOME/.config/neofetch/config.conf"
-alias neodebug="bash ~/.config/neofetch/debug-logo.sh $1"
+neodebug(){ bash ~/.config/neofetch/debug-logo.sh "$1"; }
 alias disk="bash ~/.scripts/system/fetch.sh storage"
 alias battery="bash ~/.scripts/system/fetch.sh battery"
-alias ls="eza --icons"
-alias la="eza --icons -lgha --group-directories-first"
-alias lt="eza --icons --tree"
-alias lta="eza --icons --tree -lgha"
-alias bat="bat --theme OneHalfDark"
-alias cat="bat --theme OneHalfDark -p $@"
+if command -v eza >/dev/null 2>&1; then alias ls="eza --icons"; else alias ls="ls --color=auto"; fi
+if command -v eza >/dev/null 2>&1; then alias la="eza --icons -lgha --group-directories-first"; fi
+if command -v eza >/dev/null 2>&1; then alias lt="eza --icons --tree"; fi
+if command -v eza >/dev/null 2>&1; then alias lta="eza --icons --tree -lgha"; fi
+if command -v bat >/dev/null 2>&1; then alias bat="bat --theme OneHalfDark"; fi
+cat(){ if command -v bat >/dev/null 2>&1; then bat --theme OneHalfDark -p "$@"; else command cat "$@"; fi; }
 
 #proot-distro
 alias prot="cd $PREFIX/var/lib/proot-distro"
-alias protlogin="proot-distro login $1"
+protlogin(){ proot-distro login "$1"; }
 
 #Magick
 alias listfont="magick convert -list font | grep -iE 'font:.*'"
@@ -125,7 +125,7 @@ alias zshconf="nvim ~/.zshrc"
 alias neoconf="nvim ~/.config/neofetch/config.conf"
 alias rxconf="nvim ~/.local/bin/rxfetch"
 alias neoscript="nvim ~/.config/neofetch/script.sh"
-alias fetch="bash ~/.scripts/system/fetch.sh $@"
+fetch(){ bash ~/.scripts/system/fetch.sh "$@"; }
 alias fetchconf="nvim ~/.scripts/system/fetch.sh"
 
 alias awesomeconf="nvim ~/.config/awesomeshot/awesomeshot.conf"
@@ -134,8 +134,8 @@ alias awesomeconf="nvim ~/.config/awesomeshot/awesomeshot.conf"
 alias gitgraph="git log --all --decorate --oneline --graph"
 alias gitupdate="git fetch && git pull"
 alias gitstat="git status"
-alias gitad="git add $@"
-alias gitcom="git commit -m '$@'"
+gitad(){ git add "$@"; }
+gitcom(){ git commit -m "$*"; }
 
 # Web Server (LAMP Termux)
 alias apaconf="nvim $PREFIX/etc/apache2/httpd.conf"

@@ -1,48 +1,52 @@
-<h1 align="center">TMemux</h1>
+# TMemux
 
-<p align="center">
-  Dotfiles Termux yang rapi, ringan, dan nyaman dipakai harian.
-</p>
+Dotfiles Termux yang rapi, ringan, dan siap pakai untuk penggunaan harian.
+Berbasis ZSH + Neofetch + LazyVim + WakaTime, dirancang untuk layar Termux 101×39.
 
-<p align="center">
-  ZSH + Neofetch single ASCII + LazyVim + WakaTime — autostart, siap pakai.
-</p>
+Repositori: https://github.com/nt-portal/TMemux
 
-<p align="center">
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT"></a>
-  <a href="https://github.com/nt-portal/TMemux"><img src="https://img.shields.io/github/stars/nt-portal/TMemux?style=flat-square" alt="Stars"></a>
-  <a href="https://github.com/nt-portal/TMemux"><img src="https://img.shields.io/badge/platform-Termux%20%7C%20Android-blue?style=flat-square" alt="Termux"></a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/nt-portal/TMemux">https://github.com/nt-portal/TMemux</a>
-</p>
+> Dirawat oleh Tarna.
 
 ---
 
-TMemux bikin Termux kamu enak dipandang dan enak dipakai. Sekali pasang, shell jadi rapi, prompt jelas, neofetch keluar otomatis, dan editor langsung siap ngoding. Tidak ribet, tidak berat — pas untuk layar Termux 101×39.
+## Tentang
 
-> Cocok buat kamu yang buka Termux setiap hari — mau ngoding, ngoprek, atau sekadar cek sistem dengan cepat.
+TMemux menyatukan konfigurasi shell, prompt, file manager, dan editor dalam satu paket instalasi. Fokus pada kestabilan, kecepatan, dan kemudahan kustomisasi tanpa dependensi berat. Plugin ZSH hanya dimuat jika tersedia dan alias yang membutuhkan argumen telah diperbaiki menjadi fungsi.
 
-## Kenapa TMemux
+---
 
-- **Autostart Neofetch** — buka Termux langsung lihat info sistem + ASCII khas TMemux, tetap bisa dipanggil manual `tarz` / `home` / `nt`.
-- **Ringan & rapi** — single ASCII 19×42, gap 3, tanpa fetch ganda.
-- **Siap ngoding** — LazyVim starter + font sudah terpasang, tinggal buka `nvim`.
-- **Kebiasaan tetap jalan** — WakaTime catat aktivitas shell otomatis.
-- **Tombol pas di jempol** — extra-keys default nyaman untuk HP.
+## Fitur Utama
+
+| Kategori | Detail |
+|---|---|
+| Shell | ZSH + Oh My Zsh, tema `ma`, plugin `git`, `zsh-autosuggestions`, `zsh-syntax-highlighting`, `bgnotify`, `zsh-fzf-history-search`, `zsh-autocomplete` (filter otomatis jika belum ter-clone) |
+| Prompt | Tema `ma` (`➜ user@host path git:(branch)`), fallback `bash` `PS1='\w \$'` |
+| Informasi Sistem | Neofetch single ASCII `tmemux.ascii` 19×42, `gap=3`, `image_backend=ascii`. Manual via `tarz` / `home` / `nt`, menampilkan `https://github.com/nt-portal/TMemux`. Tanpa autostart |
+| Editor | Neovim LazyVim starter + 6 plugin: `wakatime.lua`, `noice-disable.lua`, `markview.lua`, `transparent.lua`, `markmap.lua`, `error-lens.lua` |
+| Pelacakan | WakaTime via Waka-Termux (`python` + `pip wakatime`, konfigurasi `~/.wakatime.cfg`) |
+| File Manager | `lf` + `eza`/`bat`/`fzf` (fallback ke `ls`/`cat` jika `eza`/`bat` belum terpasang) |
+| Tombol Bawah | `extra-keys = [['ESC','/',{key:'-',popup:'|'},'HOME','UP','END','PGUP'],['TAB','CTRL','ALT','LEFT','DOWN','RIGHT','PGDN']]` |
+| Font | `assest/font.ttf` → `~/.termux/font.ttf` (2.4 MB) + `termux-reload-settings` |
+
+---
 
 ## Prasyarat
 
-- **Termux (Official)** — [unduh](https://github.com/termux/termux-app/releases)
-- **ZeroTermux (Unofficial)** - [unduh](https://github.com/hanxinhao000/ZeroTermux/releases)
+> **Stabil di Termux Official & ZeroTermux** — dioptimalkan untuk kedua varian.
 
-Perbarui dulu:
+- **Termux (Official)** — [termux-app/releases](https://github.com/termux/termux-app/releases) (build F-Droid direkomendasikan; versi Play Store sudah tidak di-maintain)
+- **ZeroTermux (Unofficial, kompatibel penuh)** — [ZeroTermux/releases](https://github.com/hanxinhao000/ZeroTermux/releases)
+- **Termux:API** (opsional, untuk `termux-battery-status` / `termux-reload-settings` pada neofetch `battery`) — [F-Droid](https://f-droid.org/en/packages/com.termux.api/) / Play Store
+- Android 9+ direkomendasikan. Diuji pada Termux 0.118.3, Android 15 (Redmi 25028RN03A / serenity, UMS9230E `aarch64`).
+
+Perbarui paket dasar sebelum instalasi:
 
 ```bash
 pkg update && pkg upgrade
 pkg i -y git bc
 ```
+
+---
 
 ## Instalasi
 
@@ -53,87 +57,117 @@ export COLUMNS LINES
 ./install.sh
 ```
 
-`export COLUMNS LINES` wajib — installer mengecek ukuran layar `101×39`. Kalau muncul `Please Zoom Out`, cubit kecilkan (zoom out) Termux lalu jalankan lagi. Ikuti `Y/n` sampai selesai, lalu buka ulang Termux.
+Catatan:
 
-**Yang terjadi di balik layar:** cek paket → backup dotfiles lama (`*.backup`) → salin dotfiles baru → clone plugin ZSH (6 repo) → pasang tema ZSH → pasang LazyVim → pasang WakaTime (`python` + `pip wakatime`) → atur shell ke `zsh`.
+- `export COLUMNS LINES` diperlukan karena `helper/screen.sh` memeriksa ukuran layar minimal `101×39`. Jika muncul `Please Zoom Out`, perkecil tampilan Termux (pinch zoom out) lalu jalankan ulang.
+- Installer bersifat interaktif (`Y/n`). Jawab `Y` untuk melanjutkan setiap tahap.
+- Alur: cek paket → backup dotfiles lama (`*.backup`) → salin dotfiles baru → clone 6 repositori ZSH → pasang tema ZSH → pasang LazyVim → konfigurasi WakaTime → atur shell ke `zsh`.
+- Tutup dan buka kembali Termux setelah instalasi selesai agar tema dan font diterapkan.
 
-## Sekilas Tampilan
-
-Buka Termux atau ketik salah satu — hasilnya sama:
-
-```bash
-tarz   # atau home / nt
-```
-
-```
-             .:===--==--..                 u0_a269@localhost
-           :+**####%%#%%#*+:               -----------
-          -+==---==+#%%%%#*#:              OS: Android 15 aarch64
-        .:=+++========*%%%%#*.             Host: Redmi 25028RN03A (serenity)
-       .+###*+====+*#%%##-                 Kernel: 5.15.194-android13-8
-       :*#**+*####*===+*#%#%#-             Uptime: up 2 days, 11 hours
-      .-+===++*+===*####*-                 Packages: 347 (apt)
-      -=++*++++++======+###*+---:.         Shell: bash 5.3.15
-      -=+***++++=======+*####%%%##=:       Terminal: Termux 0.118.3
-      :=+++==++*+++++=++++*#%%%##%%#-      CPU: UMS9230E (8)
-      -*##*++++++++++++++++##****####-     Memory: 2643MiB / 3790MiB
-     .=**+++=++++++=+*##*++++*####-        Disk (/): 14G / 52G
-      -**+++++++++-=###*++*###+.           Battery: via fetch.sh
-      .-+++:.*#*++*###*:                    https://github.com/nt-portal/TMemux
-        :+#####+++- .+++*+++++++##*=
-        -+++++:  ===++++====###-
-      .:=+++++++=:..-+**+=-+##*.
-:::--:-+===+***++++===-::-=====++=+##*:
-::+*-.:--===+++====-------:::::-+#%%#:
-```
-
-> Link `https://github.com/nt-portal/TMemux` muncul di baris bawah — enak buat dibagikan.
-
-## Cara Pakai
+Validasi sintaks tanpa eksekusi:
 
 ```bash
-tarz        # tampilkan neofetch TMemux
-home        # sama — alias alternatif
-nt          # sama — alias pendek
-chcolor     # ganti colorscheme
-chfont      # ganti font (default 2.4 MB JetBrains/assest)
-chzsh       # ganti tema ZSH
-disk        # info storage
-battery     # info baterai
-nvim        # buka LazyVim
+bash -n install.sh && bash -n helper/*.sh && bash -n .scripts/**/*.sh
 ```
 
-**WakaTime:** buka `~/.wakatime.cfg`, ganti `api_key = waka_api` dengan key kamu dari [wakatime.com/settings/account](https://wakatime.com/settings/account), lalu `source ~/.zshrc`.
+---
 
-**Tombol bawah:** default dua baris
+## Penggunaan
+
+### Perintah Utama
+
+| Perintah | Fungsi |
+|---|---|
+| `tarz` / `home` / `nt` | Tampilkan Neofetch TMemux |
+| `chcolor` | Ganti colorscheme (`~/.scripts/colorscheme/colors.sh`) |
+| `chfont` | Ganti font (`~/.scripts/fonts/fonts.sh`) |
+| `chzsh` | Ganti tema ZSH (`~/.scripts/zsh/changetheme.sh`) |
+| `disk` | Info penyimpanan (`fetch.sh storage`) |
+| `battery` | Info baterai (`fetch.sh battery`) |
+| `nvim` | Buka LazyVim |
+| `ls`, `la`, `lt`, `lta` | Daftar file via `eza` (fallback otomatis) |
+| `preview` | Pratinjau file via `fzf` + `bat` |
+
+### WakaTime
+
+1. Buka `~/.wakatime.cfg`
+2. Ganti `api_key = waka_api` dengan kunci dari https://wakatime.com/settings/account
+3. Muat ulang konfigurasi: `source ~/.zshrc`
+
+### Konfigurasi Neofetch
 
 ```
-ESC  /  - |  HOME UP END PGUP
-TAB  CTRL ALT LEFT DOWN RIGHT PGDN
+image_backend="ascii"
+image_source="$HOME/.config/neofetch/tmemux.ascii"
+gap=3
 ```
-(`-` ada popup `|`)
 
-## Yang Kamu Dapat
+File ASCII kustom tersedia di `~/.config/neofetch/tmemux.ascii` (19 baris, lebar maksimal 39).
 
-| Bagian | Isi |
-|--------|-----|
-| Shell | ZSH + Oh-My-Zsh, plugin autosuggestions, syntax-highlighting, bgnotify, fzf-history, autocomplete |
-| Tampilan | Neofetch single ASCII `tmemux.ascii` 19×42, autostart + manual `tarz/home/nt` |
-| Editor | Neovim LazyVim starter + 6 plugin (wakatime, noice-disable, markview, transparent, markmap, error-lens) |
-| Pelacak | WakaTime via Waka-Termux (`python` + `pip wakatime`, `~/.wakatime.cfg`) |
-| Paket | `awesomeshot bat curl clang eza fd fzf git grep imagemagick inotify-tools lf mpd mpc neovim nodejs openssh neofetch python termux-api tmux yarn zsh` |
+---
 
-## Catatan Kecil
+## Kustomisasi
 
-- `neofetch` perlu ada (`pkg i -y neofetch`). Preview di atas pakai data HP asli sebagai contoh.
-- Butuh layar `101×39` — kalau gagal, `export COLUMNS LINES` dulu.
-- Backup lama aman di `~/.config/nvim.bak` dan `~/*.backup`.
-- Buka ulang Termux setelah instal agar tema & font terasa.
+| Kebutuhan | File |
+|---|---|
+| Tema ZSH | `~/.zshrc` (`ZSH_THEME="ma"`), `~/.p10k.zsh` (`p10k configure` untuk beralih ke Powerlevel10k) |
+| Alias | `~/.aliases` (fungsi `convi`, `fetch`, `gitad`, `gitcom`, `cat` telah diperbaiki) |
+| Warna Termux | `~/.termux/colors.properties` |
+| Tombol Termux | `~/.termux/termux.properties` |
+| Warna & Font | `~/.scripts/colorscheme/colors.sh`, `~/.scripts/fonts/fonts.sh` |
+
+---
+
+## Struktur Direktori
+
+```
+TMemux/
+├── install.sh              # Entry point
+├── helper/                 # 14 modul: banner, colors, animation, package, dotfiles, clone, themes, nvchad, dll.
+├── .aliases                # Alias & fungsi shell
+├── .zshrc                  # Konfigurasi ZSH (guard plugin + source)
+├── .autostart              # Autostart non-blocking (tanpa clear, timeout 5)
+├── .p10k.zsh               # Konfigurasi Powerlevel10k (opsional)
+├── .termux/                # colors.properties, termux.properties, font.ttf
+├── .config/                # lf, mpd, ncmpcpp, neofetch, tmemux, awesomeshot
+├── .scripts/               # library, system/fetch.sh, colorscheme, fonts, zsh, toys
+├── .colorscheme/           # Koleksi colorscheme
+├── .fonts/                 # Koleksi font
+└── optional/               # compile, neovim-settings, zshthemes
+```
+
+---
+
+## Paket yang Terpasang
+
+```
+awesomeshot bat curl clang eza fd fzf git grep imagemagick
+inotify-tools lf mpd mpc neovim nodejs openssh
+neofetch python termux-api tmux yarn zsh
+```
+
+Repositori ZSH yang di-clone (6):
+
+- `robbyrussell/oh-my-zsh`
+- `zsh-users/zsh-syntax-highlighting`
+- `zsh-users/zsh-autosuggestions`
+- `joshskidmore/zsh-fzf-history-search`
+- `marlonrichert/zsh-autocomplete`
+- `jimeh/tmux-themepack`
+
+---
+
+## Catatan
+
+- **Kompatibilitas:** Termux Official (F-Droid) dan ZeroTermux berjalan penuh — instalasi, neofetch `tmemux.ascii`, ZSH, dan LazyVim identik. Versi Play Store tidak direkomendasikan (tidak di-maintain).
+- Backup dotfiles lama disimpan sebagai `~/.config/nvim.bak` dan `~/.*.backup` dengan timestamp.
+- Font default disalin dari `assest/font.ttf` ke `~/.termux/font.ttf`. Jalankan `termux-reload-settings` untuk menerapkan.
+- Jika ZSH belum terpasang, `.zshrc` tetap aman di-source oleh `bash` berkat guard `[[ -f ]]`.
+
+---
 
 ## Lisensi
 
-MIT — Copyright (c) 2026 **Tarna** <tarnawijaya@outlook.com>. Lihat [LICENSE](./LICENSE.md).
+MIT — Copyright (c) 2026 Tarna <tarnawijaya@outlook.com>. Lihat [LICENSE](./LICENSE.md).
 
-<p align="center">
-  Dibuat oleh <a href="https://github.com/nt-portal">TarnaWijaya</a>
-</p>
+Dikembangkan oleh [TarnaWijaya](https://github.com/nt-portal).

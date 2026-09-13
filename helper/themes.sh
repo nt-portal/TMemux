@@ -4,6 +4,7 @@ ZSH_CUSTOM_THEMES=(
   osx.zsh-theme
   osx2.zsh-theme
   ma.zsh-theme
+  kali.zsh-theme
   archcraft.zsh-theme
   ar-round.zsh-theme
   la-round.zsh-theme

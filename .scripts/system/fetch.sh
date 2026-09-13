@@ -7,7 +7,7 @@ LIBRARYS=(
 LIBRARY_PATH="${HOME}/.scripts/library"
 
 for LIBRARY in ${LIBRARYS[@]}; do
-  source ${LIBRARY_PATH}/${LIBRARY}.sh
+  [[ -f ${LIBRARY_PATH}/${LIBRARY}.sh ]] && source ${LIBRARY_PATH}/${LIBRARY}.sh
 done
 
 function fetchMusic() {

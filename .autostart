@@ -2,7 +2,8 @@
 #cursor bar or bold pipe
 #echo -e "\e[2 q"
 
-export COLUMNS LINES
+# COLUMNS/LINES auto dari terminal — jangan export kosong (bikin neofetch kepotong/wrap)
+# export COLUMNS LINES dihapus: biarkan stty yang tentukan. install.sh saja yang butuh export.
 
 #cursor underline    
 echo -e "\e[4 q"

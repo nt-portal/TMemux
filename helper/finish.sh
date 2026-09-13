@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TMEMUX_VERSION="1.0.0"
+TMEMUX_VERSION="1.0.0-release"
 
 function alertFinish() {
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION="1.0.0"
+VERSION="1.0.0-release"
 BUILD_DATE="2026"
 AUTHOR="Tarna"
 

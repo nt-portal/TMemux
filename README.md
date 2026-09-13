@@ -3,9 +3,9 @@
 Dotfiles Termux yang rapi, ringan, dan siap pakai untuk penggunaan harian.
 Berbasis ZSH + Neofetch + LazyVim + WakaTime, dirancang untuk layar Termux 101×39.
 
-Repositori: https://github.com/nt-portal/TMemux
+Repositori: https://github.com/nt-portal/TMemux · Rilis: [1.0.0-release](https://github.com/nt-portal/TMemux/tags) ([semua tag](https://github.com/nt-portal/TMemux/tags))
 
-> Dirawat oleh Tarna.
+> Dirawat oleh Tarna. Versi [1.0.0-release](https://github.com/nt-portal/TMemux/releases/tag/1.0.0-release).
 
 ---
 
